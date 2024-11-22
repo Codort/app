@@ -1,6 +1,10 @@
 <!-- Licensed under Apache-2.0. See LICENSE and NOTICE in the root-level directory for full license and copyright details. -->
-<template>
-  <div></div>
-</template>
+<template></template>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+useHead({
+  title: 'Team',
+});
+</script>
+
+<style></style>

@@ -3,11 +3,12 @@
   <header class="sm:justify-start sm:flex-nowrap z-11 w-full">
     <div
       id="main-header"
-      class="transition-colors duration-500 fixed w-full z-10 top-0 pt-10 pb-5 px-2 sm:px-6 lg:px-10 bg-transparent"
+      class="transition-colors duration-500 z-10 top-0 mt-8 bg-transparent w-full"
     >
-      <div class="flex items-center justify-start">
-        <!-- Sidebar toggle-->
-        <div class="flex flex-start lg:hidden me-4">
+      <!-- Above border -->
+      <div class="flex items-center justify-start w-full">
+        <!-- Sidebar toggle -->
+        <div class="flex flex-start xl:hidden me-4">
           <button
             type="button"
             class="inline-flex items-center justify-center rounded-md dark:text-offwhite focus:outline-none"
@@ -19,19 +20,25 @@
             <Icon name="fa:bars" class="h-5 w-5"></Icon>
           </button>
         </div>
-        <div class="">
-          <h2>Page title</h2>
+        <div class="w-full">
+          <h2 class="p-0 m-0 leading-8">{{ routeName }}</h2>
         </div>
       </div>
-      <div class="border-b-2 border-offblack dark:border-offwhite w-full" />
+      <!-- Border -->
+      <div
+        class="mt-2 absolute border-b-2 border-offblack dark:border-offwhite w-[calc(100%-16px)] sm:w-[calc(100%-48px)] xl:w-[calc(100%-240px-80px)]"
+      />
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-const config: any = useAppConfig();
-const menu = config.menu;
-const sidebarOpen = ref(false);
+const route = useRoute();
+const routeName = computed(() => {
+  const name = titleCase(route.path.split('/')[1]);
+  return name == '' ? 'Home' : name;
+});
 </script>

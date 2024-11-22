@@ -1,6 +1,10 @@
 // Licensed under Apache-2.0. See LICENSE and NOTICE in the root-level directory for full license and copyright details.
 export default [
   {
+    title: 'Team',
+    icon: 'ic-baseline-people',
+  },
+  {
     title: 'Hosting',
     icon: 'uil:tachometer-fast-alt',
   },
@@ -11,6 +15,7 @@ export default [
   {
     title: 'Compliance',
     icon: 'uil:check-square',
+    pages: ['Policies', 'Dependencies', 'Documentation'],
   },
   {
     title: 'Open Core',

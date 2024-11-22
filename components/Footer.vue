@@ -4,7 +4,7 @@
     class="px-4 text-sm mt-auto text-offblack dark:text-offwhite pb-1 transition-colors z-50"
   >
     <!-- logo -->
-    <div class="hover:text-gray-900">
+    <div class="">
       <NuxtLink class="dark:text-white dark:hover:text-slate-400" to="/">
         <NuxtImg
           :src="isDark ? '/images/logo_white.png' : '/images/logo_black.png'"
@@ -15,7 +15,8 @@
     </div>
     <NuxtImg src="/images/logo_white.png" class="w-0 h-0" />
     <NuxtImg src="/images/logo_black.png" class="w-0 h-0" />
-    <div class="flex items-center">
+    <!-- legals -->
+    <div class="flex items-center pb-1">
       <p class="text-sm">© Codort &#174; {{ new Date().getFullYear() }}</p>
       <span class="hex" />
       <a
@@ -24,6 +25,7 @@
         >Privacy Policy</a
       >
     </div>
+    <!-- socials -->
     <div class="flex justify-between">
       <div class="flex space-x-2 pt-1">
         <div v-for="social in config.socials" :key="social.name">
@@ -43,8 +45,8 @@
         <ColorScheme placeholder="" tag="span">
           <UButton
             :icon="isDark ? 'i-fa-moon-o' : 'i-fa-sun-o'"
-            variant="ghost"
-            class="text-offblack dark:text-offwhite hover:text-coral"
+            variant="link"
+            class="text-offblack dark:text-offwhite hover:text-coral dark:hover:text-coral"
             aria-label="Change colour mode"
             @click="toggleColourMode"
           ></UButton>

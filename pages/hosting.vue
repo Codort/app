@@ -3,4 +3,10 @@
   <div></div>
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+useHead({
+  title: 'Hosting',
+});
+</script>
+
+<style></style>

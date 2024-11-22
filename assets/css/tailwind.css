@@ -127,7 +127,7 @@
 
   a,
   .a {
-    @apply text-gray-600 hover:text-offblack dark:text-[#c7c7bf] dark:hover:text-offblack font-semibold cursor-pointer;
+    @apply text-offblack hover:text-coral dark:text-offwhite dark:hover:text-coral font-semibold cursor-pointer;
   }
 
   .asterisk {

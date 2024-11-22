@@ -2,7 +2,7 @@
 <template>
   <div class="flex h-screen w-full bg-gradient-light dark:bg-gradient-dark m-0">
     <div
-      class="duration-300 h-full"
+      class="duration-300 h-full w-[240px]"
       :class="[
         isLargeScreen || isSidebarVisible
           ? 'translate-x-0'
@@ -11,21 +11,29 @@
       ]"
       ref="sidebar"
     >
-      <LeftSidebar />
+      <Sidebar @toggle-sidebar="toggleSidebar" />
     </div>
 
     <transition name="overlay">
       <div
         v-if="!isLargeScreen && isSidebarVisible"
-        class="overlay fixed inset-0"
+        class="overlay fixed inset-0 z-40"
         @click="toggleSidebar"
       ></div>
     </transition>
 
-    <div>
-      <Header @toggle-sidebar="toggleSidebar" />
-      <main class="flex-grow flex px-2 sm:px-6 lg:px-10 mt-36">
-        <slot />
+    <div class="md:w-[calc(100%-240px)]">
+      <Header
+        @toggle-sidebar="toggleSidebar"
+        class="flex px-2 sm:px-6 xl:px-10 w-full mb-2"
+      />
+      <main class="flex-grow flex flex-col px-2 sm:px-6 xl:px-10 w-full">
+        <SubpageNav />
+        <div
+          class="mt-10 bg-offwhite dark:bg-black fixed rounded-lg w-[calc(100%-16px)] sm:w-[calc(100%-48px)] xl:w-[calc(100%-240px-80px)] h-[85%]"
+        >
+          <NuxtPage />
+        </div>
       </main>
     </div>
   </div>
@@ -43,7 +51,7 @@ const toggleSidebar = () => {
 };
 
 const updateScreenSize = () => {
-  isLargeScreen.value = window.innerWidth >= 1024;
+  isLargeScreen.value = window.innerWidth >= 1280;
 };
 
 onMounted(() => {

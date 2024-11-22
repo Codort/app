@@ -3,4 +3,8 @@
   <div></div>
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+await navigateTo('/compliance/policies');
+</script>
+
+<style scoped></style>
