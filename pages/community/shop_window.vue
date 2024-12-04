@@ -5,7 +5,7 @@
 
 <script lang="ts" setup>
 useHead({
-  title: 'Documentation',
+  title: 'Shop Window',
 });
 </script>
 

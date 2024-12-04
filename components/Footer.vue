@@ -1,30 +1,18 @@
 <!-- Licensed under Apache-2.0. See LICENSE and NOTICE in the root-level directory for full license and copyright details. -->
 <template>
   <footer
-    class="px-4 text-sm mt-auto text-offblack dark:text-offwhite pb-1 transition-colors z-50"
+    class="px-4 text-sm mt-auto text-offblack dark:text-offwhite pb-2 transition-colors z-50"
   >
     <!-- logo -->
     <div class="">
-      <NuxtLink class="dark:text-white dark:hover:text-slate-400" to="/">
-        <NuxtImg
-          :src="isDark ? '/images/logo_white.png' : '/images/logo_black.png'"
-          alt="Codort"
-          class="h-[70px]"
-        />
-      </NuxtLink>
+      <NuxtImg
+        :src="isDark ? '/images/logo_white.png' : '/images/logo_black.png'"
+        alt="Codort"
+        class="h-[70px]"
+      />
     </div>
     <NuxtImg src="/images/logo_white.png" class="w-0 h-0" />
     <NuxtImg src="/images/logo_black.png" class="w-0 h-0" />
-    <!-- legals -->
-    <div class="flex items-center pb-1">
-      <p class="text-sm">© Codort &#174; {{ new Date().getFullYear() }}</p>
-      <span class="hex" />
-      <a
-        class="text-sm"
-        to="https://docs.google.com/document/d/1wIBfNnJr3G19zIkc7fjeoZVdJZFhx2l4yDhjPws47iM/edit?usp=sharing"
-        >Privacy Policy</a
-      >
-    </div>
     <!-- socials -->
     <div class="flex justify-between">
       <div class="flex space-x-2 pt-1">
@@ -55,13 +43,23 @@
         <Icon name="fa:moon-o" class="w-0 h-0"></Icon>
       </div>
     </div>
+    <!-- legals -->
+    <div class="flex items-center pb-1">
+      <p class="text-sm">© Codort &#174; {{ new Date().getFullYear() }}</p>
+      <span class="hex" />
+      <NuxtLink
+        class="text-sm"
+        to="https://docs.google.com/document/d/1wIBfNnJr3G19zIkc7fjeoZVdJZFhx2l4yDhjPws47iM/edit?usp=sharing"
+        >Privacy Policy
+      </NuxtLink>
+    </div>
   </footer>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 const config: any = useAppConfig();
-const menu = config.menu;
+
 const colorMode = useColorMode();
 const isDark = ref(false);
 onMounted(() => {

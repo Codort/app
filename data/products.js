@@ -2,32 +2,31 @@
 export default [
   {
     title: 'Team',
-    icon: 'ic-baseline-people',
-  },
-  {
-    title: 'Hosting',
-    icon: 'uil:tachometer-fast-alt',
+    icon: 'ic-baseline-people-outline',
   },
   {
     title: 'Legal',
     icon: 'uil:file-contract',
+    pages: ['Fiscal Sponsorship', 'Registered Office'],
   },
   {
     title: 'Compliance',
     icon: 'uil:check-square',
-    pages: ['Policies', 'Dependencies', 'Documentation'],
+    pages: ['Policies', 'Dependencies', 'Documentation', 'OpenChain'],
   },
   {
-    title: 'Open Core',
-    icon: 'uil:lock-open-alt',
+    title: 'Security',
+    icon: 'material-symbols:shield-locked-outline',
   },
   {
     title: 'Community',
     icon: 'uil:comment-question',
+    pages: ['Bounties', 'Shop Window'],
   },
   {
-    title: 'Funding',
+    title: 'Revenue',
     icon: 'uil:money-stack',
+    pages: ['Funding', 'Open Core', 'Hosting'],
   },
   {
     title: 'Inner Source',

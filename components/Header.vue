@@ -25,8 +25,9 @@
         </div>
       </div>
       <!-- Border -->
+      <!-- 16px = px-2; 48px = px-6; 80px = px-10; -->
       <div
-        class="mt-2 absolute border-b-2 border-offblack dark:border-offwhite w-[calc(100%-16px)] sm:w-[calc(100%-48px)] xl:w-[calc(100%-240px-80px)]"
+        class="mt-2 absolute border-b-2 border-offblack dark:border-offwhite w-[calc(100%-16px)] sm:w-[calc(100%-48px)] xl:w-[calc(100%-80px-240px)]"
       />
     </div>
   </header>

@@ -1,6 +1,8 @@
 <!-- Licensed under Apache-2.0. See LICENSE and NOTICE in the root-level directory for full license and copyright details. -->
 <template>
-  <div class="flex h-screen w-full bg-gradient-light dark:bg-gradient-dark m-0">
+  <div
+    class="flex h-screen w-full bg-offwhite dark:bg-offblack m-0 overflow-hidden"
+  >
     <div
       class="duration-300 h-full w-[240px]"
       :class="[
@@ -22,17 +24,17 @@
       ></div>
     </transition>
 
-    <div class="md:w-[calc(100%-240px)]">
-      <Header
-        @toggle-sidebar="toggleSidebar"
-        class="flex px-2 sm:px-6 xl:px-10 w-full mb-2"
-      />
-      <main class="flex-grow flex flex-col px-2 sm:px-6 xl:px-10 w-full">
+    <div class="w-full fixed left-0 xl:left-[240px] mb-2 px-2 sm:px-6 xl:px-10">
+      <Header @toggle-sidebar="toggleSidebar" class="flex" />
+      <main class="flex-grow flex flex-col w-full ms-[2.25rem] xl:ms-0">
         <SubpageNav />
+        <!-- scrollbar wrapper -->
         <div
-          class="mt-10 bg-offwhite dark:bg-black fixed rounded-lg w-[calc(100%-16px)] sm:w-[calc(100%-48px)] xl:w-[calc(100%-240px-80px)] h-[85%]"
+          class="mt-32 fixed inset-y-0 left-0 xl:left-[240px] right-0 overflow-y-auto overflow-x-hidden pb-20"
         >
-          <NuxtPage />
+          <div class="w-full relative left-0 px-2 sm:px-6 xl:px-10">
+            <NuxtPage />
+          </div>
         </div>
       </main>
     </div>

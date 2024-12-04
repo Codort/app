@@ -4,9 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-useHead({
-  title: 'Funding',
-});
+await navigateTo('/community/bounties');
 </script>
 
-<style></style>
+<style scoped></style>

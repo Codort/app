@@ -4,9 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-useHead({
-  title: 'Community',
-});
+await navigateTo('/revenue/funding');
 </script>
 
-<style></style>
+<style scoped></style>

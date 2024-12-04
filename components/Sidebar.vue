@@ -10,7 +10,7 @@
           <h3>Company</h3>
         </div>
         <NuxtLink
-          to="profile"
+          to="/profile"
           class="sidebar_link"
           :class="{
             active: 'profile' == basePage,
@@ -37,7 +37,7 @@
       <div class="sidebar_rule"></div>
       <div class="w-full flex">
         <NuxtLink
-          to="settings"
+          to="/settings"
           class="sidebar_link"
           :class="{
             active: 'settings' == basePage,

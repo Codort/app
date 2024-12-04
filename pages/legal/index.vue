@@ -4,9 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-useHead({
-  title: 'Legal',
-});
+await navigateTo('/legal/fiscal_sponsorship');
 </script>
 
-<style></style>
+<style scoped></style>

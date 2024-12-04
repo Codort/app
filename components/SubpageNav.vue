@@ -1,8 +1,8 @@
 <template>
-  <div class="mt-2 ms-[2.25rem] xl:ms-0 flex space-x-10">
+  <div class="mt-3 flex space-x-10">
     <div v-for="page in subpages" :key="page">
       <NuxtLink
-        :to="`/${basePage}/${page.toLowerCase()}`"
+        :to="`/${basePage}/${page.toLowerCase().replace(' ', '_')}`"
         :class="{
           active: page.toLowerCase().replace(' ', '_') == routeName,
         }"
