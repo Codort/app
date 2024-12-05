@@ -1,58 +1,145 @@
 <template>
-  <UTable :rows="filteredRows" :columns="columns">
-    <template #name-data="{ row }">
-      <span>{{ row.name }}</span>
-    </template>
+  <div>
+    <UTable :rows="filteredRows" :columns="columns">
+      <template #name-data="{ row, index }">
+        <div @dblclick="editCell(index, 'name')" class="cursor-text">
+          <input
+            v-if="
+              editingCell.rowIndex === index && editingCell.field === 'name'
+            "
+            v-model="rows[index].name"
+            @blur="saveCell(index, 'name')"
+            @keyup.enter="saveCell(index, 'name')"
+            @keyup.esc="discardCell(index, 'name')"
+            class="border p-1"
+          />
+          <span v-else>{{ row.name }}</span>
+          <div
+            v-if="
+              editingCell.rowIndex === index &&
+              editingCell.field === 'name' &&
+              validationError
+            "
+            class="text-red-500 text-sm mt-1 break-words"
+          >
+            <!-- Break validation error so it doesn't make columns longer -->
+            {{ validationError }}
+          </div>
+        </div>
+      </template>
 
-    <template #always-data="{ index }">
-      <UCheckbox
-        v-model="rows[index].always"
-        @change="toggleCheckbox($event, index, 'always')"
-      />
-    </template>
+      <template #filename-data="{ row, index }">
+        <div @dblclick="editCell(index, 'filename')" class="cursor-text">
+          <input
+            v-if="
+              editingCell.rowIndex === index && editingCell.field === 'filename'
+            "
+            v-model="rows[index].filename"
+            @blur="saveCell(index, 'filename')"
+            @keyup.enter="saveCell(index, 'filename')"
+            @keyup.esc="discardCell(index, 'filename')"
+            class="border p-1"
+          />
+          <span v-else>{{ row.filename }}</span>
+          <div
+            v-if="
+              editingCell.rowIndex === index &&
+              editingCell.field === 'filename' &&
+              validationError
+            "
+            class="text-red-500 text-sm mt-1 break-words"
+          >
+            {{ validationError }}
+          </div>
+        </div>
+      </template>
 
-    <template #public-data="{ index }">
-      <UCheckbox
-        v-model="rows[index].public"
-        @change="toggleCheckbox($event, index, 'public')"
-      />
-    </template>
-
-    <template #private-data="{ index }">
-      <UCheckbox
-        v-model="rows[index].private"
-        @change="toggleCheckbox($event, index, 'private')"
-      />
-    </template>
-
-    <!-- FIXME: POPULATE REPOS AS ITEMS -->
-    <template #custom-data="{ row }">
-      <UDropdown :items="repos(row)" :popper="{ placement: 'bottom-start' }">
-        <UButton
-          color="white"
-          label="Select"
-          trailing-icon="i-heroicons-chevron-down-20-solid"
+      <template #always-data="{ index }">
+        <UCheckbox
+          v-model="rows[index].always"
+          @change="toggleCheckbox($event, index, 'always')"
         />
-      </UDropdown>
-    </template>
+      </template>
 
-    <template #actions-data="{ row }">
-      <UDropdown
-        :items="actionOptions(row)"
-        :popper="{ placement: 'bottom-start' }"
+      <template #public-data="{ index }">
+        <UCheckbox
+          v-model="rows[index].public"
+          @change="toggleCheckbox($event, index, 'public')"
+        />
+      </template>
+
+      <template #private-data="{ index }">
+        <UCheckbox
+          v-model="rows[index].private"
+          @change="toggleCheckbox($event, index, 'private')"
+        />
+      </template>
+
+      <!-- FIXME: POPULATE REPOS AS ITEMS -->
+      <template #custom-data="{ row }">
+        <UDropdown :items="repos(row)" :popper="{ placement: 'bottom-start' }">
+          <UButton
+            color="white"
+            label="Select"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
+          />
+        </UDropdown>
+      </template>
+
+      <template #actions-data="{ row, index }">
+        <UDropdown
+          :items="actionOptions(row, index)"
+          :popper="{ placement: 'bottom-start' }"
+        >
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-ellipsis-horizontal-20-solid"
+          />
+        </UDropdown>
+      </template>
+    </UTable>
+    <div
+      v-if="showEditor"
+      class="w-[85vh] h-[80vh] left-[50px] top-0 bg-white dark:bg-black absolute overflow-y-hidden overflow-x-hidden border-2 border-white rounded-md"
+    >
+      <div
+        class="border-b-2 border-black flex items-center ps-5 py-3 rounded-md justify-between"
       >
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
-      </UDropdown>
-    </template>
-  </UTable>
+        <div class="flex items-center gap-x-2">
+          Edit
+          <UToggle
+            on-icon="i-heroicons-pencil-square-20-solid"
+            off-icon="i-heroicons-eye"
+            v-model="showPreview"
+            :ui="{ inactive: 'bg-coral dark:bg-coral' }"
+          />
+          Preview
+        </div>
+        <div class="flex items-center gap-x-2 me-4">
+          <UButton @click="discardChanges()">Discard</UButton>
+          <UButton @click="saveChanges()">Save</UButton>
+        </div>
+      </div>
+      <div class="w-full h-full bg-black">
+        <div v-if="!showPreview" class="w-full h-full overflow-y-auto">
+          <textarea
+            v-model="markdownContent"
+            placeholder="Create policy..."
+            class="w-full h-full p-4 resize-none rounded-md focus:outline-none"
+          ></textarea>
+        </div>
+        <div v-if="showPreview">
+          <div v-html="mdc"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import MarkdownIt from 'markdown-it';
 
 const columns = [
   {
@@ -92,6 +179,7 @@ let rows = ref([
     public: false,
     private: false,
     hidden: false,
+    contents: '# README',
   },
   {
     name: 'Code of Conduct',
@@ -100,6 +188,7 @@ let rows = ref([
     public: false,
     private: false,
     hidden: false,
+    contents: '# Code of Conduct',
   },
   {
     name: 'Contribution Guidelines',
@@ -108,6 +197,7 @@ let rows = ref([
     public: false,
     private: false,
     hidden: false,
+    contents: '# Contribution Guidelines',
   },
   {
     name: 'License',
@@ -116,6 +206,7 @@ let rows = ref([
     public: false,
     private: false,
     hidden: false,
+    contents: '# License',
   },
   {
     name: 'Notice',
@@ -124,6 +215,7 @@ let rows = ref([
     public: false,
     private: false,
     hidden: false,
+    contents: '# Notice',
   },
 ]);
 
@@ -141,41 +233,24 @@ const filteredRows = computed(() => {
   });
 });
 
+// Fixme: autofill from GH
 const repos = (row) => [
   [
     {
-      label: 'Edit',
+      label: 'Repo 1',
     },
     {
-      label: 'Duplicate',
-    },
-  ],
-  [
-    {
-      label: 'Archive',
-    },
-    {
-      label: 'Move',
-    },
-  ],
-  [
-    {
-      label: 'Delete',
+      label: 'Repo 2',
     },
   ],
 ];
 
-const actionOptions = (row) => [
+const actionOptions = (row, index) => [
   [
     {
       label: 'Preview',
       icon: 'i-heroicons-eye',
-      click: () => console.log('Edit', row.id),
-    },
-    {
-      label: 'Edit',
-      icon: 'i-heroicons-pencil-square-20-solid',
-      click: () => console.log('Edit', row.id),
+      click: () => openEditor(row, index, true),
     },
     {
       label: 'Duplicate',
@@ -184,6 +259,28 @@ const actionOptions = (row) => [
     },
   ],
   [
+    {
+      label: 'Edit',
+      icon: 'i-heroicons-pencil-square-20-solid',
+      click: () => openEditor(row, index, false),
+    },
+    {
+      label: 'Rename',
+      icon: 'i-heroicons-tag',
+      click: () => editCell(index, 'name'),
+    },
+    {
+      label: 'File rename',
+      icon: 'i-heroicons-document',
+      click: () => editCell(index, 'filename'),
+    },
+  ],
+  [
+    {
+      label: 'Download',
+      icon: 'i-heroicons-arrow-down-tray',
+      click: () => downloadFile(row),
+    },
     {
       label: 'Archive',
       icon: 'i-heroicons-archive-box-20-solid',
@@ -237,7 +334,92 @@ const duplicateRow = function (row) {
   rows.value.push(newRow);
 };
 
+const showPreview = ref(false);
+const showEditor = ref(false);
+const markdownContent = ref('');
+
+const mdParser = new MarkdownIt();
+const mdc = computed(() => mdParser.render(markdownContent.value));
+
+const selectedRowIndex = ref(null);
+
+function openEditor(row, index, previewMode) {
+  markdownContent.value = row.contents; // Load content from the selected row
+  selectedRowIndex.value = index; // Track which row is being edited
+  showPreview.value = previewMode; // Set mode (edit or preview)
+  showEditor.value = true; // Show editor
+}
+
+function saveChanges() {
+  if (selectedRowIndex.value !== null) {
+    rows.value[selectedRowIndex.value].contents = markdownContent.value;
+  }
+  closeEditor();
+}
+
+function discardChanges() {
+  closeEditor();
+}
+
+const closeEditor = function (save) {
+  selectedRowIndex.value = null;
+  showEditor.value = false;
+};
+
+const downloadFile = function (row) {
+  const blob = new Blob([row.contents], { type: 'text/markdown' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = row.filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+};
+
+const editingCell = ref({ rowIndex: null, field: null });
+const tempValue = ref(''); // Temporary value for editing
+const validationError = ref(''); // Error message for validation
+
+function editCell(rowIndex, field) {
+  // if there's an error in another cell revert the value
+  if (validationError.value && editingCell.value.rowIndex !== null) {
+    rows.value[editingCell.value.rowIndex][editingCell.value.field] =
+      tempValue.value.trim();
+    validationError.value = '';
+  }
+  editingCell.value = { rowIndex, field };
+  tempValue.value = rows.value[rowIndex][field]; // Load current value into tempValue
+}
+
+function saveCell(rowIndex, field) {
+  const oldValue = tempValue.value.trim();
+  const newValue = rows.value[rowIndex][field];
+
+  const isDuplicate = rows.value.some(
+    (row, idx) => idx !== rowIndex && row[field] === newValue,
+  );
+
+  if (isDuplicate) {
+    validationError.value = `The ${field} "${newValue}" already exists.`;
+    return; // Exit without saving
+  }
+
+  validationError.value = '';
+  editingCell.value = { rowIndex: null, field: null };
+}
+
+function discardCell(rowIndex, field) {
+  rows.value[rowIndex][field] = tempValue.value.trim();
+  validationError.value = '';
+  editingCell.value = { rowIndex: null, field: null };
+}
+
 useHead({
   title: 'Policies',
 });
 </script>
+
+<style scoped>
+textarea {
+  font-family: monospace;
+}
+</style>

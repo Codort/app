@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/image', '@nuxtjs/google-fonts', '@nuxt/ui', '@nuxt/content'],
+  modules: [
+    '@nuxt/image',
+    '@nuxtjs/google-fonts',
+    '@nuxt/ui',
+    '@nuxt/content',
+    '@nuxtjs/mdc',
+  ],
 
   colorMode: {
     preference: 'system',
@@ -23,12 +29,6 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
-    },
-  },
-
-  content: {
-    markdown: {
-      remarkPlugins: ['remark-reading-time'],
     },
   },
 

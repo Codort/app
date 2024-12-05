@@ -29,6 +29,7 @@
     "@nuxt/ui": "^2.18.7",
     "@nuxtjs/color-mode": "^3.5.1",
     "@nuxtjs/google-fonts": "^3.2.0",
+    "@nuxtjs/mdc": "^0.10.0",
     "nuxt": "^3.13.2",
     "remark-reading-time": "^2.0.1"
   },
@@ -49,6 +50,7 @@
     "autoprefixer": "10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "markdown-it": "^14.1.0",
     "prettier": "^3.3.3",
     "sass": "^1.77.8"
   }
