@@ -30,6 +30,7 @@
     "@nuxtjs/color-mode": "^3.5.1",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/mdc": "^0.10.0",
+    "dompurify": "^3.2.2",
     "nuxt": "^3.13.2",
     "remark-reading-time": "^2.0.1"
   },
