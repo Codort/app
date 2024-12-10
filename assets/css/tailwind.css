@@ -58,12 +58,12 @@
     @apply text-offblack dark:text-offwhite no-underline;
   }
 
-  ul,
+  /* ul,
   li {
     @apply font-medium;
-  }
+  } */
 
-  li {
+  /* li {
     @apply mb-[0.5rem];
   }
 
@@ -79,7 +79,7 @@
     clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
     margin-right: 0.5em;
     @apply bg-gradient-dark-two dark:bg-gradient-light-two;
-  }
+  } */
 
   h1,
   .h1 {

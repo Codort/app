@@ -15,8 +15,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Current row data
-const rows = useState('rows');
-rows.value.push({
+const complianceDocuments = useState('complianceDocuments');
+complianceDocuments.value.push({
   name: '',
   filename: '',
   always: false,
@@ -27,11 +27,11 @@ rows.value.push({
   contents: '',
 });
 
-const rowIndex = rows.value.length - 1;
+const rowIndex = complianceDocuments.value.length - 1;
 
 // Discard changes and go back
 function discardChanges(editorNameError, editorFilenameError) {
-  rows.value.pop();
+  complianceDocuments.value.pop();
   editorNameError = '';
   editorFilenameError = '';
   router.push('/compliance/policies');

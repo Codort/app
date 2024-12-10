@@ -1,84 +1,174 @@
 <template>
   <div>
-    <h2>Variables</h2>
-    <UTable :rows="variableRows" :columns="variableColumns"> </UTable>
     <div class="flex justify-between items-center">
-      <h2>Documents</h2>
-      <UButton class="" icon="i-heroicons-document-arrow-up" @click="newRow()"
-        >New</UButton
-      >
+      <h2>Variables</h2>
+      <div>
+        <UButton
+          class=""
+          icon="i-heroicons-document-arrow-up"
+          @click="newVariable()"
+          >New</UButton
+        >
+        <UButton
+          v-if="selectedVariables.length"
+          class="mx-4"
+          icon="i-heroicons-document-duplicate"
+          @click="duplicateVariables()"
+          >Duplicate</UButton
+        >
+        <UButton
+          v-if="selectedVariables.length"
+          class=""
+          color="red"
+          icon="i-heroicons-trash"
+          @click="deleteVariables()"
+          >Delete</UButton
+        >
+      </div>
     </div>
-    <UTable :rows="filteredRows" :columns="columns">
-      <template #name-data="{ row, index }">
-        <div @dblclick="editCell(index, 'name')" class="cursor-text">
-          <input
-            v-if="
-              editingCell.rowIndex === index && editingCell.field === 'name'
-            "
-            v-model="rows[index].name"
-            @blur="saveCell(index, 'name')"
-            @keyup.enter="saveCell(index, 'name')"
-            @keyup.esc="discardCell(index, 'name')"
-            class="border p-1"
-          />
-          <span v-else>{{ row.name }}</span>
-          <div
-            v-if="
-              editingCell.rowIndex === index &&
-              editingCell.field === 'name' &&
-              validationError
-            "
-            class="text-red-500 text-sm mt-1 break-words"
+    <UTable
+      :rows="complianceVariables"
+      :columns="variableColumns"
+      v-model="selectedVariables"
+    >
+      <template #variable-data="{ index }">
+        <EditableTableField
+          col-name="variable"
+          :index="index"
+          :rows="complianceVariables"
+          :editing-cell="editingCell"
+        />
+      </template>
+      <template #dynamic-data="{ row }">
+        <div v-if="!row.static" class="flex items-center w-[200px] mx-0 px-0">
+          <USelectMenu
+            v-model="row.dynamic"
+            :options="dynamicOptions"
+            option-attribute="label"
+            class="me-2 grow"
+            :required="false"
           >
-            <!-- Break validation error so it doesn't make columns longer -->
-            {{ validationError }}
-          </div>
+            <!-- TODO: Fix hover effect so padding isn't ignored -->
+            <template #option="{ option }">
+              <div
+                class="w-full cursor-pointer"
+                @mouseover="hoveredItem = option.label"
+                @mouseleave="hoveredItem = null"
+              >
+                <div class="w-full px-0 mx-0">{{ option.label }}</div>
+                <div
+                  v-if="hoveredItem === option.label"
+                  class="text-xs text-gray-500"
+                >
+                  {{ option.description }}
+                </div>
+              </div>
+            </template>
+          </USelectMenu>
+          <span
+            class="w-4 h-4 shrink-0"
+            @click.stop.prevent="row.dynamic = null"
+            aria-label="Clear selection"
+          >
+            <UIcon
+              name="i-heroicons-x-mark"
+              v-if="row.dynamic"
+              class="w-4 h-4 text-black dark:text-white cursor-pointer"
+            />
+          </span>
         </div>
       </template>
-
-      <template #filename-data="{ row, index }">
-        <div @dblclick="editCell(index, 'filename')" class="cursor-text">
-          <input
-            v-if="
-              editingCell.rowIndex === index && editingCell.field === 'filename'
-            "
-            v-model="rows[index].filename"
-            @blur="saveCell(index, 'filename')"
-            @keyup.enter="saveCell(index, 'filename')"
-            @keyup.esc="discardCell(index, 'filename')"
-            class="border p-1"
+      <template #static-data="{ row }">
+        <input
+          v-if="!row.dynamic"
+          v-model="row.static"
+          placeholder="Enter value..."
+          class="border p-1"
+        />
+      </template>
+      <template #description-data="{ index }">
+        <EditableTableField
+          col-name="description"
+          :index="index"
+          :rows="complianceVariables"
+          :editing-cell="editingCell"
+          :required="false"
+        />
+      </template>
+      <template #actions-data="{ row, index }">
+        <UDropdown
+          :items="variableActionOptions(row, index)"
+          :popper="{ placement: 'bottom-start' }"
+        >
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-ellipsis-horizontal-20-solid"
           />
-          <span v-else>{{ row.filename }}</span>
-          <div
-            v-if="
-              editingCell.rowIndex === index &&
-              editingCell.field === 'filename' &&
-              validationError
-            "
-            class="text-red-500 text-sm mt-1 break-words"
-          >
-            {{ validationError }}
-          </div>
-        </div>
+        </UDropdown>
+      </template>
+    </UTable>
+    <div class="flex justify-between items-center">
+      <h2>Documents</h2>
+      <div>
+        <UButton
+          class=""
+          icon="i-heroicons-document-arrow-up"
+          @click="newDocument()"
+          >New</UButton
+        >
+        <UButton
+          v-if="selectedDocuments.length"
+          class="mx-4"
+          icon="i-heroicons-document-duplicate"
+          @click="duplicateDocuments()"
+          >Duplicate</UButton
+        >
+        <UButton
+          v-if="selectedDocuments.length"
+          class=""
+          color="red"
+          icon="i-heroicons-trash"
+          @click="deleteDocuments()"
+          >Delete</UButton
+        >
+      </div>
+    </div>
+    <UTable :rows="filteredRows" :columns="columns" v-model="selectedDocuments">
+      <template #name-data="{ index }">
+        <EditableTableField
+          col-name="name"
+          :index="index"
+          :rows="complianceDocuments"
+          :editing-cell="editingCell"
+        />
+      </template>
+      <template #filename-data="{ index }">
+        <EditableTableField
+          col-name="filename"
+          :index="index"
+          :rows="complianceDocuments"
+          :editing-cell="editingCell"
+        />
       </template>
 
       <template #always-data="{ index }">
         <UCheckbox
-          v-model="rows[index].always"
+          v-model="complianceDocuments[index].always"
           @change="toggleCheckbox($event, index, 'always')"
         />
       </template>
 
       <template #public-data="{ index }">
         <UCheckbox
-          v-model="rows[index].public"
+          v-model="complianceDocuments[index].public"
           @change="toggleCheckbox($event, index, 'public')"
         />
       </template>
 
       <template #private-data="{ index }">
         <UCheckbox
-          v-model="rows[index].private"
+          v-model="complianceDocuments[index].private"
           @change="toggleCheckbox($event, index, 'private')"
         />
       </template>
@@ -120,8 +210,8 @@ const router = useRouter();
 
 const variableColumns = [
   {
-    key: 'name',
-    label: 'Name',
+    key: 'variable',
+    label: 'Variable',
   },
   {
     key: 'dynamic',
@@ -135,41 +225,44 @@ const variableColumns = [
     key: 'description',
     label: 'Description',
   },
-];
-
-const variablePreviewColumns = [
   {
-    key: 'name',
-    label: 'Name',
+    key: 'actions',
   },
 ];
 
-const variableRows = ref([
+let complianceVariables = useState('complianceVariables', () => [
   {
-    name: 'repoName',
-    dynamic: '',
-    static: '',
+    variable: 'repoName',
+    dynamic: null,
+    static: null,
     description: 'Name of current repository',
+    value: '',
   },
   {
-    name: 'orgName',
-    dynamic: '',
-    static: '',
+    variable: 'orgName',
+    dynamic: null,
+    static: null,
     description: 'Name of current organisation',
+    value: '',
   },
   {
-    name: 'userEmail',
-    dynamic: '',
-    static: '',
+    variable: 'userEmail',
+    dynamic: null,
+    static: null,
     description: 'Your email address',
+    value: '',
   },
   {
-    name: 'complianceEmail',
-    dynamic: '',
-    static: 'compliance@yourcompany.com',
+    variable: 'complianceEmail',
+    dynamic: null,
+    static: null,
     description: 'Email for CoC violations etc.',
+    value: 'compliance@yourcompany.com',
   },
 ]);
+
+const selectedVariables = ref([]);
+const selectedDocuments = ref([]);
 
 const columns = [
   {
@@ -201,7 +294,7 @@ const columns = [
   },
 ];
 
-let rows = useState('rows', () => [
+let complianceDocuments = useState('complianceDocuments', () => [
   {
     name: 'README',
     filename: 'README.md',
@@ -255,15 +348,15 @@ let rows = useState('rows', () => [
 ]);
 
 function toggleCheckbox(el, rowIndex, checkboxType) {
-  rows.value[rowIndex].always = false;
-  rows.value[rowIndex].public = false;
-  rows.value[rowIndex].private = false;
+  complianceDocuments.value[rowIndex].always = false;
+  complianceDocuments.value[rowIndex].public = false;
+  complianceDocuments.value[rowIndex].private = false;
 
-  rows.value[rowIndex][checkboxType] = el;
+  complianceDocuments.value[rowIndex][checkboxType] = el;
 }
 
 const filteredRows = computed(() => {
-  return rows.value.filter((row) => {
+  return complianceDocuments.value.filter((row) => {
     return !row.hidden;
   });
 });
@@ -280,6 +373,55 @@ const repos = (row) => [
   ],
 ];
 
+const hoveredItem = ref(null);
+
+const dynamicOptions = [
+  {
+    label: 'Repo name',
+    description: 'Name of active repository',
+  },
+  {
+    label: 'Repo owner',
+    description: 'Owner of active repository',
+  },
+
+  {
+    label: 'Org name',
+    description: 'Name of active organisation',
+  },
+  {
+    label: 'Org owner',
+    description: 'Owner of active organisation',
+  },
+];
+
+const variableActionOptions = (row, index) => [
+  [
+    {
+      label: 'Rename',
+      icon: 'i-heroicons-tag',
+      click: () => editCell(index, 'variable'),
+    },
+    {
+      label: 'Edit description',
+      icon: 'i-heroicons-pencil-square-20-solid',
+      click: () => editCell(index, 'description'),
+    },
+    {
+      label: 'Duplicate',
+      icon: 'i-heroicons-document-duplicate',
+      click: () => duplicateVariable(row),
+    },
+  ],
+  [
+    {
+      label: 'Delete',
+      icon: 'i-heroicons-trash',
+      click: () => deleteRow(complianceVariables, row, 'variable'),
+    },
+  ],
+];
+
 const actionOptions = (row, index) => [
   [
     {
@@ -289,8 +431,8 @@ const actionOptions = (row, index) => [
     },
     {
       label: 'Duplicate',
-      icon: 'i-heroicons-document-duplicate-20-solid',
-      click: () => duplicateRow(row),
+      icon: 'i-heroicons-document-duplicate',
+      click: () => duplicateDocument(row),
     },
   ],
   [
@@ -318,13 +460,13 @@ const actionOptions = (row, index) => [
     },
     {
       label: 'Archive',
-      icon: 'i-heroicons-archive-box-20-solid',
+      icon: 'i-heroicons-archive-box',
       click: () => archiveRow(row),
     },
     {
       label: 'Delete',
-      icon: 'i-heroicons-trash-20-solid',
-      click: () => deleteRow(row),
+      icon: 'i-heroicons-trash',
+      click: () => deleteRow(complianceDocuments, row, 'name'),
     },
   ],
 ];
@@ -337,16 +479,35 @@ const archiveRow = function (row) {
   row.custom = '';
 };
 
-const deleteRow = function (row) {
-  rows.value = rows.value.filter((el) => {
-    return el.name !== row.name;
+const deleteVariables = function () {
+  selectedVariables.value.forEach((row) =>
+    deleteRow(complianceVariables, row, 'variable'),
+  );
+  selectedVariables.value = [];
+};
+
+const deleteDocuments = function () {
+  selectedDocuments.value.forEach((row) =>
+    deleteRow(complianceDocuments, row, 'name'),
+  );
+  selectedDocuments.value = [];
+};
+
+const deleteRow = function (data, row, field) {
+  data.value = data.value.filter((el) => {
+    return el[field] !== row[field];
   });
 };
 
-const duplicateRow = function (row) {
+const duplicateDocuments = function () {
+  selectedDocuments.value.forEach((row) => duplicateDocument(row));
+  selectedDocuments.value = [];
+};
+
+const duplicateDocument = function (row) {
   const newRow = { ...row };
 
-  const oldNames = new Set(rows.value.map((el) => el.name));
+  const oldNames = new Set(complianceDocuments.value.map((el) => el.name));
 
   let newName = newRow.name;
   let idx = 0;
@@ -365,7 +526,30 @@ const duplicateRow = function (row) {
 
   newRow.filename = `${basename}(${idx})${extension}`;
 
-  rows.value.push(newRow);
+  complianceDocuments.value.push(newRow);
+};
+
+const duplicateVariables = function () {
+  selectedVariables.value.forEach((row) => duplicateVariable(row));
+  selectedVariables.value = [];
+};
+
+const duplicateVariable = function (row) {
+  const newRow = { ...row };
+
+  const oldNames = new Set(complianceVariables.value.map((el) => el.variable));
+
+  let newName = newRow.variable;
+  let idx = 0;
+
+  while (oldNames.has(newName)) {
+    idx++;
+    newName = `${newRow.variable}${idx}`;
+  }
+
+  newRow.variable = newName;
+
+  complianceVariables.value.push(newRow);
 };
 
 function openEditor(row, previewMode) {
@@ -375,7 +559,7 @@ function openEditor(row, previewMode) {
   });
 }
 
-function newRow() {
+function newDocument() {
   router.push({
     path: `policies/new`,
   });
@@ -396,41 +580,25 @@ const downloadFile = function (row) {
   URL.revokeObjectURL(link.href);
 };
 
-const editingCell = ref({ rowIndex: null, field: null });
-const tempValue = ref(''); // Temporary value for editing
-const validationError = ref(''); // Error message for validation
+const editingCell = ref({
+  rowIndex: null,
+  field: null,
+});
 
 function editCell(rowIndex, field) {
-  // if there's an error in another cell revert the value
-  if (validationError.value && editingCell.value.rowIndex !== null) {
-    rows.value[editingCell.value.rowIndex][editingCell.value.field] =
-      tempValue.value.trim();
-    validationError.value = '';
-  }
-  editingCell.value = { rowIndex, field };
-  tempValue.value = rows.value[rowIndex][field]; // Load current value into tempValue
+  editingCell.value.rowIndex = rowIndex;
+  editingCell.value.field = field;
 }
 
-function saveCell(rowIndex, field) {
-  const newValue = rows.value[rowIndex][field];
-
-  const isDuplicate = rows.value.some(
-    (row, idx) => idx !== rowIndex && row[field] === newValue,
-  );
-
-  if (isDuplicate) {
-    validationError.value = `The ${field} "${newValue}" already exists.`;
-    return; // Exit without saving
-  }
-
-  validationError.value = '';
-  editingCell.value = { rowIndex: null, field: null };
-}
-
-function discardCell(rowIndex, field) {
-  rows.value[rowIndex][field] = tempValue.value.trim();
-  validationError.value = '';
-  editingCell.value = { rowIndex: null, field: null };
+function newVariable() {
+  complianceVariables.value.push({
+    variable: '',
+    dynamic: '',
+    static: '',
+    description: '',
+    value: '',
+  });
+  editCell(complianceVariables.value.length - 1, 'variable');
 }
 
 useHead({

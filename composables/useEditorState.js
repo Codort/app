@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { useRouter } from 'vue-router';
 
 export function useEditorState({ initialPreview }) {
-  const rows = useState('rows');
+  const complianceDocuments = useState('complianceDocuments');
   const editorNameError = ref('');
   const editorFilenameError = ref('');
   const router = useRouter();
@@ -17,14 +17,14 @@ export function useEditorState({ initialPreview }) {
   }
 
   function checkNames(rowIndex) {
-    const row = rows.value[rowIndex];
+    const row = complianceDocuments.value[rowIndex];
     const newName = row.name;
     const newFilename = row.filename;
 
-    const isDuplicateName = rows.value.some(
+    const isDuplicateName = complianceDocuments.value.some(
       (row, idx) => idx !== rowIndex && row.name === newName,
     );
-    const isDuplicateFilename = rows.value.some(
+    const isDuplicateFilename = complianceDocuments.value.some(
       (row, idx) => idx !== rowIndex && row.filename === newFilename,
     );
 
@@ -54,7 +54,8 @@ export function useEditorState({ initialPreview }) {
 
   function saveChanges(rowIndex, markdownContent) {
     if (rowIndex !== null) {
-      rows.value[rowIndex].contents = DOMPurify.sanitize(markdownContent);
+      complianceDocuments.value[rowIndex].contents =
+        DOMPurify.sanitize(markdownContent);
     }
 
     if (!checkNames(rowIndex)) {
@@ -65,8 +66,8 @@ export function useEditorState({ initialPreview }) {
   }
 
   function deleteRow(rowIndex) {
-    rows.value = rows.value.filter((el) => {
-      return el.name !== rows.value[rowIndex].name;
+    complianceDocuments.value = complianceDocuments.value.filter((el) => {
+      return el.name !== complianceDocuments.value[rowIndex].name;
     });
     router.push('/compliance/policies');
   }

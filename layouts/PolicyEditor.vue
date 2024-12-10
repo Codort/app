@@ -1,6 +1,6 @@
 <template>
   <div
-    class="overflow-y-hidden overflow-x-hidden border-2 border-black dark:border-white rounded-md w-100 h-[85vh]"
+    class="overflow-y-hidden overflow-x-hidden border-2 border-black dark:border-white rounded-md h-[85vh]"
   >
     <div
       class="border-b-2 border-black dark:border-white ps-5 py-3 rounded-md justify-between items-center sticky top-0 bg-inherit z-10"
@@ -62,11 +62,22 @@
           class="w-full h-full p-4 resize-none rounded-md focus:outline-none"
         ></textarea>
       </div>
-      <div v-if="showPreview" class="flex">
-        <div v-html="mdc" class="p-4 w-[70%]"></div>
-        <div class="h-100 w-[30%] border-l-2 p-4">
+      <div v-if="showPreview" class="flex h-full">
+        <div v-html="mdc" class="p-4 w-[60%] h-full"></div>
+        <div class="h-full right-0 w-[40%] border-l-2 p-4">
           <h3>Variables</h3>
-          <UTable :rows="variableRows" :columns="variablePreviewColumns">
+          <UTable :rows="complianceVariables" :columns="variablePreviewColumns">
+            <template #value-data="{ row, index }">
+              <div class="">
+                <input
+                  v-if="!row.static"
+                  v-model="complianceVariables[index].value"
+                  placeholder="Enter test value"
+                  class="border p-1"
+                />
+                <span v-else class="cursor-default">{{ row.static }}</span>
+              </div>
+            </template>
           </UTable>
         </div>
       </div>
@@ -78,22 +89,50 @@
 import MarkdownIt from 'markdown-it';
 import { ref } from 'vue';
 
-const rows = useState('rows');
+const complianceDocuments = useState('complianceDocuments');
+const complianceVariables = useState('complianceVariables');
+
+const variablePreviewColumns = [
+  {
+    key: 'variable',
+    label: 'Variable',
+  },
+  {
+    key: 'value',
+    label: 'Value',
+  },
+];
 
 const props = useAttrs();
 const rowIndex = props.rowIndex;
-const row = rows.value[rowIndex];
+const row = complianceDocuments.value[rowIndex];
 const initialPreview = ref(props.showPreview);
 
 // Markdown parser
 const markdownContent = ref(row.contents);
 const mdParser = new MarkdownIt();
 const mdc = computed(() => {
+  let output;
+
+  const pattern = /\{\{\s*(\w+)\s*\}\}/g;
+
+  output = markdownContent.value.replace(pattern, (match, variable) => {
+    const entry = complianceVariables.value.find(
+      (row) => row.variable === variable,
+    );
+
+    if (entry) {
+      return entry.static ? entry.static : entry.value;
+    }
+    return match; // Replace or keep original if not found
+  });
+
   if (row.filename.endsWith('.md')) {
-    return mdParser.render(markdownContent.value);
+    output = mdParser.render(output);
   } else {
-    return markdownContent.value.replace(/\n/g, '<br>');
+    output = output.replace(/\n/g, '<br>');
   }
+  return output;
 });
 
 const {
