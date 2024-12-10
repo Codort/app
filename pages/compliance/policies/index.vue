@@ -253,6 +253,13 @@ let complianceVariables = useState('complianceVariables', () => [
     value: '',
   },
   {
+    variable: 'year',
+    dynamic: null,
+    static: null,
+    description: 'Current year',
+    value: '',
+  },
+  {
     variable: 'complianceEmail',
     dynamic: null,
     static: null,
@@ -384,7 +391,6 @@ const dynamicOptions = [
     label: 'Repo owner',
     description: 'Owner of active repository',
   },
-
   {
     label: 'Org name',
     description: 'Name of active organisation',
@@ -392,6 +398,10 @@ const dynamicOptions = [
   {
     label: 'Org owner',
     description: 'Owner of active organisation',
+  },
+  {
+    label: 'Year',
+    description: 'Current year',
   },
 ];
 
