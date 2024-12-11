@@ -10,7 +10,6 @@ export function useEditorState({ initialPreview }) {
   const showPreview = ref(initialPreview);
 
   function validateToggle(rowIndex) {
-    console.log(showPreview.value);
     if (showPreview.value && !checkNames(rowIndex)) {
       showPreview.value = false;
     }

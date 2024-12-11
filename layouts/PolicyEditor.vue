@@ -56,10 +56,12 @@
       </div>
     </div>
     <div
-      class="flex w-full h-[calc(100%-10rem)] sm:h-[calc(100%-7rem)] bg-white dark:bg-black overflow-hidden grow-0"
+      class="block lg:flex w-full h-[calc(100%-10rem)] sm:h-[calc(100%-7rem)] bg-white dark:bg-black overflow-hidden grow-0"
     >
       <!-- Main section -->
-      <div class="w-[80rem] h-full font-mono grow-0 overflow-y-hidden">
+      <div
+        class="w-full lg:w-[45rem] h-[80%] lg:h-full font-mono grow-0 overflow-y-hidden"
+      >
         <textarea
           v-if="!showPreview"
           v-model="markdownContent"
@@ -74,7 +76,9 @@
         ></div>
       </div>
       <!-- Right sidebar -->
-      <div class="h-full border-l-2 border-l-gray-500 p-4 flex-shrink-0">
+      <div
+        class="w-full lg:w-[calc(100%-45rem)] h-[20%] lg:h-full border-t-2 lg:border-l-2 border-gray-500 p-4 overflow-y-auto"
+      >
         <div v-if="!showPreview">
           <h3>Templates</h3>
           <UAccordion :items="templates">
@@ -156,8 +160,12 @@ const row = complianceDocuments.value[rowIndex];
 const initialPreview = ref(props.showPreview);
 
 const useTemplate = function (template) {
-  row.name = template.content.type;
-  row.filename = template.content.type.toUpperCase().replace(/\s/g, '_');
+  if (row.name === '') {
+    row.name = template.content.name;
+  }
+  if (row.filename === '') {
+    row.filename = template.content.filename;
+  }
   markdownContent.value = template.content.text;
 };
 
@@ -177,10 +185,12 @@ const mdc = computed(() => {
       (row) => row.variable === variable,
     );
 
-    if (entry) {
-      return entry.static ? entry.static : entry.value;
+    if (entry && entry !== '' && (entry.static || entry.value)) {
+      const tmp = entry.static ? entry.static : entry.value;
+      return `<span class='found'>${tmp}</span>`;
     }
-    return match; // Replace or keep original if not found
+
+    return `<span class='missing'>${match}</span>`;
   });
 
   if (row.filename.endsWith('.md')) {
@@ -204,5 +214,13 @@ const {
 <style lang="css">
 #mdc p {
   @apply pb-4;
+}
+
+.missing {
+  @apply bg-coral rounded-md p-[2px] dark:text-black;
+}
+
+.found {
+  @apply bg-cdtyellow rounded-md p-[2px] dark:text-black;
 }
 </style>
