@@ -1,12 +1,13 @@
 <template>
   <div
-    class="overflow-y-hidden overflow-x-hidden border-2 border-black dark:border-white rounded-md h-[85vh]"
+    class="overflow-hidden border-2 border-black dark:border-white rounded-md h-[85vh]"
   >
+    <!-- header -->
     <div
-      class="border-b-2 border-black dark:border-white ps-5 py-3 rounded-md justify-between items-center sticky top-0 bg-inherit z-10"
+      class="h-[10rem] sm:h-[7rem] overflow-hidden border-b-2 border-black dark:border-white ps-5 py-3 rounded-md justify-between items-center sticky top-0 bg-white dark:bg-black z-10"
     >
-      <div class="flex gap-4">
-        <div class="flex flex-col shrink grow-0">
+      <div class="block sm:flex gap-4">
+        <div class="block sm:flex flex-col shrink grow-0">
           <input v-if="!showPreview" v-model="row.name" class="border p-1" />
           <span v-else>{{ row.name }}</span>
           <span
@@ -16,7 +17,7 @@
           >
         </div>
         as
-        <div class="flex flex-col shrink grow-0">
+        <div class="block sm:flex flex-col shrink grow-0">
           <input
             v-if="!showPreview"
             v-model="row.filename"
@@ -30,8 +31,8 @@
           >
         </div>
       </div>
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-x-2">
+      <div class="flex items-center justify-between pt-2">
+        <div class="flex items-center gap-x-2 py-2">
           Edit
           <UToggle
             on-icon="i-heroicons-pencil-square-20-solid"
@@ -54,17 +55,26 @@
         </div>
       </div>
     </div>
-    <div class="flex w-full h-full bg-black overflow-y-auto">
-      <div class="w-[60%] h-full">
+    <div
+      class="flex w-full h-[calc(100%-10rem)] sm:h-[calc(100%-7rem)] bg-white dark:bg-black overflow-hidden grow-0"
+    >
+      <!-- Main section -->
+      <div class="w-[80rem] h-full font-mono grow-0 overflow-y-hidden">
         <textarea
           v-if="!showPreview"
           v-model="markdownContent"
           placeholder="Create policy..."
-          class="h-full w-full p-4 resize-none rounded-md focus:outline-none"
+          class="h-full w-full p-4 resize-none rounded-md focus:outline-none overflow-y-auto"
         ></textarea>
-        <div v-else v-html="mdc" class="p-4 w-full h-full" id="mdc"></div>
+        <div
+          v-else
+          v-html="mdc"
+          class="h-full w-full p-4 overflow-y-auto"
+          id="mdc"
+        ></div>
       </div>
-      <div class="w-[40%] h-full border-l-2 p-4">
+      <!-- Right sidebar -->
+      <div class="h-full border-l-2 border-l-gray-500 p-4 flex-shrink-0">
         <div v-if="!showPreview">
           <h3>Templates</h3>
           <UAccordion :items="templates">
@@ -114,42 +124,10 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it';
 import { ref } from 'vue';
+import templates from '~/data/templates.js';
 
 const complianceDocuments = useState('complianceDocuments');
 const complianceVariables = useState('complianceVariables');
-
-const templates = [
-  {
-    label: 'Licenses',
-    icon: 'i-heroicons-information-circle',
-    content: [
-      {
-        label: 'MIT',
-        description: 'A permissive and commonly used OSI approved license.',
-        content: {
-          type: 'LICENSE',
-          text: `MIT License
-
-Copyright (c) {{ year }} {{ copyrightName }}
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-[test](https://www.google.com)
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`,
-        },
-      },
-      {
-        label: 'GPL-2',
-        description:
-          'A strong, copyleft OSI-approved license. GPL-3 is more common.',
-        content: { type: 'LICENSE', text: 'Lorem ipsum' },
-      },
-    ],
-  },
-];
 
 const filteredTemplates = function (type) {
   if (type) {
@@ -179,8 +157,7 @@ const initialPreview = ref(props.showPreview);
 
 const useTemplate = function (template) {
   row.name = template.content.type;
-  row.filename =
-    template.content.type.toUpperCase().replace(/\s/g, '_') + '.md';
+  row.filename = template.content.type.toUpperCase().replace(/\s/g, '_');
   markdownContent.value = template.content.text;
 };
 
@@ -209,7 +186,7 @@ const mdc = computed(() => {
   if (row.filename.endsWith('.md')) {
     output = mdParser.render(output);
   } else {
-    output = output.replace(/\n/g, '<br><br>');
+    output = output.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;<wbr>');
   }
   return output;
 });

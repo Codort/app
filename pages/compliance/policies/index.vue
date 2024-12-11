@@ -334,7 +334,7 @@ let complianceDocuments = useState('complianceDocuments', () => [
   },
   {
     name: 'License',
-    filename: 'LICENSE.md',
+    filename: 'LICENSE',
     always: false,
     public: false,
     private: false,
@@ -615,9 +615,3 @@ useHead({
   title: 'Policies',
 });
 </script>
-
-<style scoped>
-textarea {
-  font-family: monospace;
-}
-</style>

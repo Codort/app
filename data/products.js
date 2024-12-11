@@ -28,8 +28,8 @@ export default [
     icon: 'uil:money-stack',
     pages: ['Funding', 'Open Core', 'Hosting'],
   },
-  {
-    title: 'Inner Source',
-    icon: 'uil:folder-lock',
-  },
+  // {
+  //   title: 'Inner Source',
+  //   icon: 'uil:folder-lock',
+  // },
 ];
