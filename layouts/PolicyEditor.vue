@@ -196,7 +196,9 @@ const mdc = computed(() => {
   if (row.filename.endsWith('.md')) {
     output = mdParser.render(output);
   } else {
-    output = output.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;<wbr>');
+    output = output
+      .replace(/(?<!<[^>]*)\n/g, '<br>')
+      .replace(/(?<!<[^>]*) /g, '&nbsp;<wbr>');
   }
   return output;
 });

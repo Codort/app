@@ -4,29 +4,30 @@ export default [
     title: 'Team',
     icon: 'ic-baseline-people-outline',
   },
-  {
-    title: 'Legal',
-    icon: 'uil:file-contract',
-    pages: ['Fiscal Sponsorship', 'Registered Office'],
-  },
+  // {
+  //   title: 'Legal',
+  //   icon: 'uil:file-contract',
+  //   pages: ['Fiscal Sponsorship', 'Registered Office'],
+  // },
   {
     title: 'Compliance',
     icon: 'uil:check-square',
-    pages: ['Policies', 'Dependencies', 'Documentation', 'OpenChain'],
+    pages: ['Policies', 'Documents', 'OpenChain'],
   },
   {
     title: 'Security',
     icon: 'material-symbols:shield-locked-outline',
+    pages: ['Dependencies'],
   },
   {
     title: 'Community',
     icon: 'uil:comment-question',
-    pages: ['Bounties', 'Shop Window'],
+    pages: ['Bounties', 'Shop Window', 'Metrics'],
   },
   {
     title: 'Revenue',
     icon: 'uil:money-stack',
-    pages: ['Funding', 'Open Core', 'Hosting'],
+    pages: ['Hosting', 'Open Core', 'Sponsorship'],
   },
   // {
   //   title: 'Inner Source',

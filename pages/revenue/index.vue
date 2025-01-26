@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-await navigateTo('/revenue/funding');
+await navigateTo('/revenue/hosting');
 </script>
 
 <style scoped></style>

@@ -7,9 +7,9 @@
       <div class="">
         <div class="ps-6 flex items-center w-full pt-4">
           <Icon name="fa-image" class="sidebar_icon"></Icon>
-          <h3>Company</h3>
+          <h3>Organisation</h3>
         </div>
-        <NuxtLink
+        <!-- <NuxtLink
           to="/profile"
           class="sidebar_link"
           :class="{
@@ -18,9 +18,9 @@
         >
           <Icon name="uil-head-side" class="sidebar_icon"></Icon>
           <p>Profile</p>
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
-      <div class="sidebar_rule"></div>
+      <!-- <div class="sidebar_rule"></div> -->
       <div v-for="product in products" :key="product.title" class="w-full flex">
         <NuxtLink
           :to="`/${product.title.toLowerCase().replace(' ', '_')}`"

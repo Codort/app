@@ -4,9 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-useHead({
-  title: 'Security',
-});
+await navigateTo('/security/dependencies');
 </script>
 
-<style></style>
+<style scoped></style>
