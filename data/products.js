@@ -22,7 +22,7 @@ export default [
   {
     title: 'Community',
     icon: 'uil:comment-question',
-    pages: ['Bounties', 'Shop Window', 'Metrics'],
+    pages: ['Bounties', 'Shop Window', 'Metrics', 'Events'],
   },
   {
     title: 'Revenue',
