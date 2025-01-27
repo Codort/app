@@ -59,4 +59,20 @@ Enterprise features will be available for free to non-profit OSS.
 
 ## 💖 Contributing
 
-Currently we are in development and welcome all contributions to our core codebase - full contribution guidelines coming soon!
+## Contributing :heart:
+
+We invite you to contribute and help improve Codort.
+Before making any contributions please make sure you've read our [Code of Conduct](https://github.com/Codort/.github/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/Codort/.github/blob/main/CONTRIBUTING.md).
+
+There are many ways you can be involved whether you're an experienced developer or completely new to coding and/or open-source.
+You could:
+
+🐛 **Report a bug.** Open an issue and tell us about a bug or issue you've found in our codebase. An issue doesn't have to be breaking code, it could also be a typo in documentation, we welcome all forms of contributions.
+
+🔈**Suggest a new feature or change.** If you have an idea for a feature we could include, we'd love to hear about it.
+
+❓ **Ask a question.** Unsure about how something works or need help to get started using or contributing to our code?
+
+💻**Write some code.** We are currently welcoming pull requests from contributors. If you've found a bug/issue and want to fix it yourself, please open a pull request with your change.
+
+See all our [amazing contributors here](https://github.com/Codort#our-contributors-).
