@@ -59,8 +59,6 @@ Enterprise features will be available for free to non-profit OSS.
 
 ## 💖 Contributing
 
-## Contributing :heart:
-
 We invite you to contribute and help improve Codort.
 Before making any contributions please make sure you've read our [Code of Conduct](https://github.com/Codort/.github/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/Codort/.github/blob/main/CONTRIBUTING.md).
 
